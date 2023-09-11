@@ -49,7 +49,7 @@ const Start = ({ navigation }) => {
         </View>
       </ImageBackground>
       { Platform.OS === 'ios' ? <KeyboardAvoidingView behavior='padding' /> : null }
-
+      { Platform.OS === 'android' ? <KeyboardAvoidingView behavior='height' /> : null }
     </View>
   )
 }
