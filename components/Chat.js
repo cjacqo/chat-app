@@ -14,12 +14,12 @@ const Chat = ({ isConnected, db, route, navigation }) => {
   useEffect(() => {
     navigation.setOptions({ title: name })
 
-    // unregister current onSnapshot() listener to avoid registering multiple listeners when
-    // useEffect code is re-executed
-    if (unsubMessages) unsubMessages()
-    unsubMessages = null
-
     if (isConnected === true) {
+      // unregister current onSnapshot() listener to avoid registering multiple listeners when
+      // useEffect code is re-executed
+      if (unsubMessages) unsubMessages()
+      unsubMessages = null
+    
       const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'))
       unsubMessages = onSnapshot(q, documentsSnapshot => {
         let newMessages = []
