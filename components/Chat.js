@@ -35,7 +35,7 @@ const Chat = ({ isConnected, db, route, navigation }) => {
     return () => {
       if (unsubMessages) unsubMessages()
     }
-  }, [])
+  }, [isConnected])
 
   const loadCachedMessages = async () => {
     const cachedMessages = AsyncStorage.getItem('messages') || []
