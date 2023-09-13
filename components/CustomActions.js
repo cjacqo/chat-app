@@ -6,6 +6,8 @@ import * as ImagePicker from 'expo-image-picker'
 
 const CustomActions = ({ wrapperStyle, iconTextStyle, userID, onSend, storage }) => {
   const actionSheet = useActionSheet()
+
+  //
   
   // Determine which type of message the user wants to send run appropriate function
   const onActionPress = () => {
