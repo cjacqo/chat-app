@@ -12,6 +12,7 @@ const Stack = createNativeStackNavigator()
 
 import { initializeApp } from 'firebase/app'
 import { getFirestore, disableNetwork, enableNetwork } from 'firebase/firestore'
+import { getStorage } from 'firebase/storage'
 
 const App = () => {
   // Your web app's Firebase configuration
@@ -29,6 +30,7 @@ const App = () => {
   
   // Initialize Cloud Firestore and get a reference to the service
   const db = getFirestore(app)
+  const storage = getStorage(app)
 
   const connectionStatus = useNetInfo()
 
@@ -46,7 +48,7 @@ const App = () => {
           name='Start'
           component={Start} />
         <Stack.Screen name='Chat'>
-          {props => <Chat isConnected={connectionStatus.isConnected} db={db} {...props} />}
+          {props => <Chat isConnected={connectionStatus.isConnected} db={db} storage={storage} {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
