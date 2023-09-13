@@ -28,12 +28,13 @@ const App = () => {
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   
-  // Initialize Cloud Firestore and get a reference to the service
+  // Initialize Cloud Firestore and Storage and get a reference to the service
   const db = getFirestore(app)
   const storage = getStorage(app)
 
   const connectionStatus = useNetInfo()
 
+  // Check if the user is connected to a network/wifi
   useEffect(() => {
     if (connectionStatus.isConnected === false) {
       Alert.alert('Connection lost!')

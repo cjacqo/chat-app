@@ -7,15 +7,19 @@ import CustomActions from './CustomActions'
 import MapView from 'react-native-maps'
 
 const Chat = ({ isConnected, db, storage, route, navigation }) => {
-  const { userID, name, color } = route.params
+  const { userID, name } = route.params
   const [messages, setMessages] = useState([])
   
   let unsubMessages
   
+  // Verify if user is connected then determine where to load messages from
+  // OFFLINE: from cache
+  // ONLINE: from cloud
   useEffect(() => {
     navigation.setOptions({ title: name })
 
-    if (isConnected === true) {
+    if (isConnected === true) { // user is online: load messages from cloud
+
       // unregister current onSnapshot() listener to avoid registering multiple listeners when
       // useEffect code is re-executed
       if (unsubMessages) unsubMessages()
@@ -30,7 +34,7 @@ const Chat = ({ isConnected, db, storage, route, navigation }) => {
         cacheMessages(newMessages)
         setMessages(newMessages)
       })
-    } else loadCachedMessages()
+    } else loadCachedMessages() // user is offline: load messages from cache
 
     // Clean up code
     return () => {
@@ -38,11 +42,13 @@ const Chat = ({ isConnected, db, storage, route, navigation }) => {
     }
   }, [isConnected])
 
+  // Load messages from local storage (AsyncStorage)
   const loadCachedMessages = async () => {
     const cachedMessages = AsyncStorage.getItem('messages') || []
     setMessages(JSON.parse(cachedMessages))
   }
 
+  // Cache messages to local storage (AsyncStorage)
   const cacheMessages = async (messagesToCache) => {
     try {
       new AsyncStorage.setItem('messages', JSON.stringify(messagesToCache))
@@ -51,10 +57,12 @@ const Chat = ({ isConnected, db, storage, route, navigation }) => {
     }
   }
 
+  // Add message to the 'messages' collection in firebase on button press
   const onSend = newMessages => {
     addDoc(collection(db, 'messages'), newMessages[0])
   }
 
+  // Render bubble (message) with a wrapperStyle to differentiate between right and left
   const renderBubble = props => {
     return <Bubble
       {...props}
@@ -70,10 +78,16 @@ const Chat = ({ isConnected, db, storage, route, navigation }) => {
     else return null
   }
 
+  // Custom actions are the button on the left of the input field and include
+  // 1. Choose From Library
+  // 2. Take a Picture
+  // 3. Send Location
+  // 4. Cancel
   const renderCustomActions = props => {
     return <CustomActions storage={storage} userID={userID} {...props} />
   }
 
+  // Custom Views can be created here based on properties of the message from the props param
   const renderCustomView = props => {
     const { currentMessage } = props
     if (currentMessage.location) {

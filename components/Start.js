@@ -8,6 +8,7 @@ const Start = ({ navigation }) => {
 
   const auth = getAuth()
 
+  // Callback function to sign user in and pass userID, name and color to the next page
   const signInUser = () => {
     signInAnonymously(auth)
       .then(res => {
@@ -62,6 +63,7 @@ const Start = ({ navigation }) => {
           </View>
         </View>
       </ImageBackground>
+      {/* Check for os and decide on behavior of the keyboard */}
       { Platform.OS === 'ios' ? <KeyboardAvoidingView behavior='padding' /> : null }
       { Platform.OS === 'android' ? <KeyboardAvoidingView behavior='height' /> : null }
     </View>

@@ -7,6 +7,7 @@ import * as ImagePicker from 'expo-image-picker'
 const CustomActions = ({ wrapperStyle, iconTextStyle, userID, onSend, storage }) => {
   const actionSheet = useActionSheet()
   
+  // Determine which type of message the user wants to send run appropriate function
   const onActionPress = () => {
     const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel']
     const cancelButtonIndex = options.length - 1
@@ -32,6 +33,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, userID, onSend, storage })
     )
   }
 
+  // Ask for user's permission to access their location then send location via message
   const getLocation = async () => {
     let permissions = await Location.requestForegroundPermissionsAsync()
     if (permissions?.granted) {
@@ -47,6 +49,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, userID, onSend, storage })
     } else Alert.alert('Permissions haven\'t been granted')
   }
 
+  // Create a reference to a photo the user sends, convert to a BLOB, then upload and send photo message
   const uploadAndSendImage = async (imageURI) => {
     const newUploadRef = ref(storage, generateReference(imageURI))
     const response = await fetch(imageURI)
@@ -57,6 +60,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, userID, onSend, storage })
     })
   }
   
+  // Ask for user's permission to access their photo library then send photo a user selects
   const pickImage = async () => {
     let permissions = await ImagePicker.requestMediaLibraryPermissionsAsync()
     if (permissions?.granted) {
@@ -66,6 +70,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, userID, onSend, storage })
     }
   }
 
+  // Ask for user's permission to access their camera then send photo they take with camera
   const takePhoto = async () => {
     let permissions = await ImagePicker.requestCameraPermissionsAsync()
     if (permissions?.granted) {
@@ -75,6 +80,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, userID, onSend, storage })
     }
   }
 
+  // Used to generate a unique reference ID for an image
   const generateReference = uri => {
     const timeStamp = new Date().getTime()
     const imageName = uri.split('/')[uri.split('/').length - 1]
